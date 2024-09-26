@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<style>
+.footer-logo p {
+    padding: 100px;
+    font-size: 30px !important; /* Увеличить размер */
+    font-weight: bold; /* Сделать текст жирным */
+    text-align: center;
+}
+</style>
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3f51b5">
+    <title>{% block title %}Госзакуп тендеры{% endblock title %}</title>
+    <meta name="description" content="Госзакуп тендеры">
+    <link href="{% static 'img/favicon2.png' %}" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
+    <link href="{% static 'journal/vendor/bootstrap/css3/bootstrap.min.css' %}?v=1.2" rel="stylesheet">
+    <link href="{% static 'journal/css/outwork_style.css' %}?v=1.11" rel="stylesheet" type="text/css">
+<style>
+    #body {
+        background-image: url("{% static 'img/background.jpg' %}");
+        background-size: cover; /* Масштабировать изображение, чтобы покрыть всю область */
+        background-repeat: no-repeat; /* Отключить повторение изображения */
+        background-position: center center; /* Центрировать изображение */
+    }
+</style>
+
+    {% block extra_css %}{% endblock extra_css %}
+</head>
+
+<body>
+<div id="loader">
+    <div class="loader"></div>
+</div>
+<div id="wrapper">
+
+    {% include 'layouts/nav.html' %}
+    <div id="body">
+        {% block content %}{% endblock content %}
+    </div>
+    <div id="footer">
+        <footer class="footer" style="background: black; color: red">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-logo">
+                        <h2 style="color: white; text-align: center; font-size: 180px; font-weight: bold; margin-top: -40px;">ProTenderZone</h2>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-xs-12 h-100 text-left">
+                        <h2 class="h6"><b>Контакты</b></h2>
+                        <p>WhatsApp: <a href="https://wa.me/77066411305" target="_blank">+77066411305</a></p>
+                        <p>Электронный адрес: <a href="mailto:" class="text-white">protenderzone@gmail.com</a></p>
+
+                        <p class="mt-5">
+                            © 2024 ProTenderZone
+                        </p>
+                    </div>
+                    <div class="col-lg-5 col-md-6 col-xs-12">
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+
+
+{% block extra_js %}
+    <script src="{% static 'journal/vendor/bootstrap/js3/bootstrap.min.js' %}?v=1.1"></script>
+    <script src="{% static 'journal/vendor/bootstrap/js3/bootstrap.bundle.min.js' %}?v=1.1"></script>
+    <script src="{% static 'journal/vendor/jquery/jquery-2.2.4.min.js' %}"></script>
+    <script>
+        $("#navBurger").on("click", function () {
+            $("#navbarNav").slideToggle("slow", function () {
+            });
+        });
+
+    </script>
+{% endblock extra_js %}
+
+<script>
+    $(window).on("load", function () {
+        $("#loader").fadeOut("slow"); // После загрузки страницы прячем прелоадер
+    });
+</script>
+<style>
+    /* Стили для прелоадера */
+    #loader {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader {
+        border: 20px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 20px solid #3498db;
+        width: 200px;
+        height: 200px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+</body>
+</html>

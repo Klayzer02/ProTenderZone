@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center pt-5 pb-5">
+        <div class="col-md-4" style="background-color: #45485b; padding: 20px; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);">
+            <h1 class="h1 mb-6 text-center" style="color: white;">Профиль</h1>
+            <p class="h6 pt-4" style="color: white;">Имя пользователя: {{ profile.get_user}}</p>
+            <p class="h6 pt-4" style="color: white;">ФИО: {{ profile.get_full_name }}</p>
+            <p class="h6 pt-4" style="color: white;">Номер телефона: {{ user_info.profile.get_phone_number }}</p>
+            <p class="h6 pt-4" style="color: white;">Почта: {{ user_info.profile.mail }}</p>
+            <p class="h6 pt-4" style="color: white;">Статус подписки: {% if user.subscription.is_active %}Активна{% else %}Неактивна{% endif %}</p>
+            <p class="h6 pt-4" style="color: white;">Дата окончания подписки: {{ user.subscription.end_date }} UTC/GMT +5   </p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

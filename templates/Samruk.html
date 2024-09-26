@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block title %}Тендеры{% endblock %}
+{% block content %}
+<style>
+    #body {
+        background-image: url("{% static 'imfg/background.jpg' %}");
+        background-size: cover; /* Масштабировать изображение, чтобы покрыть всю область */
+        background-repeat: no-repeat; /* Отключить повторение изображения */
+        background-position: center center; /* Центрировать изображение */
+    }
+</style>
+
+    <div class="contractor_content mb-0">
+        <div class="container">
+            <h3 class="row mb-3 pt-1 pb-1 bg-dark-subtle row-gap-3 ms-0 me-0" style="display: flex; justify-content: center; align-items: center;">Поиск тендеров</h3>
+            <form method="GET" action="{% url 'devices:devices_page2' %}" class="w-100">
+                <div class="row mb-3 pt-4 pb-4 bg-dark-subtle row-gap-3 ms-0 me-0">
+                    <div class="col-3">
+                        <label>Наименование объявления</label>
+                        <input type="text" name="in_name" class="form-control"
+                               placeholder="Наименование объявления" value="{{ request.GET.name__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Организатор</label>
+                        <input type="text" name="in_customer" class="form-control"
+                               placeholder="Организатор" value="{{ request.GET.subdivision__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Номер</label>
+                        <input type="text" name="in_number" class="form-control"
+                               placeholder="Номер"
+                               value="{{ request.GET.factory_number__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Статус</label>
+                        <input type="text" name="s2_status" class="form-control"
+                               placeholder="Статус" value="{{ request.GET.sensor__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Способ закупки</label>
+                        <input type="text" name="s2_method" class="form-control"
+                               placeholder="Способ закупки" value="{{ request.GET.sensor__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Сумма закупки</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" name="in_amount_from" class="form-control"
+                                       placeholder="Сумма закупки с"
+                                       value="{{ request.GET.quantity__gte }}">
+                            </div>
+                            <div class="col">
+                                <input type="number" name="in_amount_to" class="form-control"
+                                       placeholder="Сумма закупки по"
+                                       value="{{ request.GET.quantity__lte }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <label>Признаки закупки</label>
+                        <input type="text" name="s2_signs" class="form-control"
+                               placeholder="Признаки закупки" value="{{ request.GET.sensor__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Место поставки</label>
+                        <input type="text" name="s2_kato" class="form-control"
+                               placeholder="Место поставки" value="{{ request.GET.sensor__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Предмет закупки</label>
+                        <input type="text" name="s2_trade_type" class="form-control"
+                               placeholder="Предмет закупки" value="{{ request.GET.sensor__icontains }}">
+                    </div>
+                    <div class="col-3">
+                        <label>Окончание приема заявок c и по</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="date" name="in_end_date_from" class="form-control"
+                                       placeholder="От"
+                                       value="{{ request.GET.date_next_verification__gte }}">
+                            </div>
+                            <div class="col">
+                                <input type="date" name="in_end_date_to" class="form-control"
+                                       placeholder="До"
+                                       value="{{ request.GET.date_next_verification__lte }}"
+                                       max="{{ today|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100 mt-2">
+                        <button type="submit" class="btn btn-primary me-3">Поиск</button>
+                        <a href="{% url 'devices:devices_page' %}#nofilter"
+                           class="btn btn-primary text-white">Сбросить</a>
+                    </div>
+                </div>
+            </form>
+
+
+            {% if devices %}
+                <div class="h5">
+                    <p>Количество записей: <b>{{ devices_count|intcomma }}</b></p>
+                    <p>Количество приборов: <b>{{ devices_quantity_count.quantity|intcomma }}</b></p>
+                </div>
+                <table class="table-bordered border-dark" id="products_table">
+                    <thead>
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Подразделение</th>
+                        <th>Заводской Номер</th>
+                        <th>Датчик</th>
+                        <th>Количество</th>
+                        <th>Дата Выпуска</th>
+                        <th>Дата Ввода</th>
+                        <th>Дата Поверки</th>
+                        <th>Результат Ремонта</th>
+                        <th>Дата Следующей Поверки</th>
+                        <th>Состояние</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for device in devices %}
+                        <tr class="device_tr">
+                            <td class="td_name" style="max-width: 200px">{{ device.name }}</td>
+                            <td class="td_subdivision">{{ device.subdivision }}</td>
+                            <td class="td_factory_number">{{ device.factory_number }}</td>
+                            <td class="td_sensor">{{ device.sensor }}</td>
+                            <td class="td_quantity">{{ device.quantity }}</td>
+                            <td class="td_date_issued">{{ device.date_issued|date:"d.m.Y" }}</td>
+                            <td class="td_date_entry">{{ device.date_entry|date:"d.m.Y" }}</td>
+                            <td class="td_date_verification">{{ device.date_verification|date:"d.m.Y" }}</td>
+                            <td class="td_repair_result">{{ device.repair_result }}</td>
+                            <td class="td_date_next_verification">{{ device.date_next_verification|date:"d.m.Y" }}</td>
+                            <td class="td_state">{{ device.state|default_if_none:"" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div>
+                    <h3 class="row mb-3 pt-1 pb-1 bg-dark-subtle row-gap-3 ms-0 me-0" style="display: flex; justify-content: center; align-items: center;">Ничего не найдено</h3>
+                </div>
+            {% endif %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination mt-4">
+                    <li class="step-links">
+                        {% if devices.has_previous %}
+                            <li class="page-item"><a class="page-link"
+                                                     href="?page=1{% if search_querydict %}&{{ search_querydict }}{% endif %}"
+                                                     aria-label="Previous"><span
+                                    aria-hidden="true">&laquo;</span></a></li>
+                            <li class="page-item"><a class="page-link"
+                                                     href="?page=
+
+
+                                                             {{ devices.previous_page_number }}{% if search_querydict %}&{{ search_querydict }}{% endif %}">&#8249;</a>
+                            </li>
+                        {% endif %}
+                    </li>
+
+                    {% for page_num in devices.paginator.page_range %}
+                        {% if page_num >= devices.number|add:"-2" and page_num <= devices.number|add:"2" %}
+                            <li class="page-item {% if page_num == devices.number %}active{% endif %}">
+                                <a class="page-link" href="?page=
+
+
+                                        {{ page_num }}{% if search_querydict %}&{{ search_querydict }}{% endif %}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if devices.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page=
+
+
+                                {{ devices.next_page_number }}{% if search_querydict %}&{{ search_querydict }}{% endif %}">&#8250;</a>
+                        </li>
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page=
+
+
+                                                         {{ devices.paginator.num_pages }}{% if search_querydict %}&{{ search_querydict }}{% endif %}"><span
+                                aria-hidden="true">&raquo;</span>
+                        </a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <script src="{% static 'journal/vendor/jquery/jquery-2.2.4.min.js' %}"></script>
+
+    <script>
+        let productsTable = document.getElementById('products_table');
+        if (productsTable) {
+            let deviceTr = document.querySelectorAll('.device_tr');
+            deviceTr.forEach(tr => {
+                let repairResult = tr.querySelector('.td_repair_result');
+                let dateNextVer = tr.querySelector('.td_date_next_verification');
+                let state = tr.querySelector('.td_state');
+                if (dateNextVer) {
+                    let dateText = dateNextVer.textContent.trim();
+                    let [day, month, year] = dateText.split('.').map(num => parseInt(num, 10));
+                    let dateValue = new Date(year, month - 1, day); // month is 0-based
+                    let todayDate = new Date();
+                    todayDate.setHours(0, 0, 0, 0); // Ignore the time part for comparison
+
+                    console.log("dateValue", dateValue);
+                    console.log("todayDate", todayDate);
+                    console.log("state.textContent", state.textContent);
+
+                    if (repairResult && (repairResult.textContent.trim() === "Годен" || repairResult.textContent.trim() === "") && (dateValue <= todayDate) && (state.textContent.trim() === "В подразделении")) {
+                        repairResult.classList.add('bg-warning');
+                        tr.classList.add('bg-warning');
+                    }
+                }
+            });
+        }
+
+    </script>
+
+
+{% endblock %}

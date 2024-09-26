@@ -1,0 +1,42 @@
+{% load static %}
+{% load i18n %}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg out-nav navbar-static-top fixed-top" style="background-color: rgba(255, 255, 255, 1); border: none; box-shadow: none;">
+    <div class="container">
+        <a class="navbar-brand" href="/"><img src="{% static 'img/favicon.png' %}" alt="Logo"></a>
+        <button id="navBurger" class="navbar-toggler border-0" aria-label="Button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="{{ home_page }} nav-item">
+                    <a class="nav-link" href="{% url 'devices:index' %}">Главная</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-4">
+                {% if request.user.is_authenticated %}
+                    <li>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Профиль
+                            </a>
+                            <ul class="dropdown-menu text-left">
+                                <li><a class="dropdown-item" href="{% url 'profiles:profiles' %}">Мой профиль</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <form method="post" action="{% url 'profiles:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link">Выйти</button>
+                        </form>
+                    </li>
+                {% elif request.user.is_anonymous %}
+                    <li><a href="{% url 'profiles:login' %}">Вход</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </div>
+</nav>
